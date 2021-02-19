@@ -1,0 +1,24 @@
+# Turn on validation, so we can use import:
+version: ~> 1.0
+
+import: land-of-apps/land-of-apps:travis/python-imports.yml
+
+language:
+  python
+
+python:
+  - "3.9"
+
+env:
+  -DJANGO_VERSION=3.1.6
+
+services:
+  - postgres
+
+before_script:
+  - pip install -U pip setuptools
+  - make install
+  - pip install appmap
+
+script:
+  - APPMAP=true pytest || true # 18 tests fail out of 1366

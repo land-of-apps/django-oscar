@@ -1,0 +1,6 @@
+name: django-oscar
+packages:
+- path: django-oscar
+- path: sandbox
+- path: src
+- path: tests
