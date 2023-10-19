@@ -1,3 +1,4 @@
+appmap>=1.1.0.dev0
 # These requirements are only necessary when developing on Oscar.
 
 # development
