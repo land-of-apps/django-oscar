@@ -18,6 +18,7 @@ from oscar.core.compat import existing_user_fields, get_user_model
 from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.core.utils import datetime_combine
 from oscar.forms import widgets
+from captcha.fields import CaptchaField
 
 CustomerDispatcher = get_class("customer.utils", "CustomerDispatcher")
 ProductAlert = get_model("customer", "ProductAlert")
@@ -106,6 +107,7 @@ class EmailUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
     password2 = forms.CharField(label=_("Confirm password"), widget=forms.PasswordInput)
     redirect_url = forms.CharField(widget=forms.HiddenInput, required=False)
+    captcha = CaptchaField()
 
     class Meta:
         model = User
