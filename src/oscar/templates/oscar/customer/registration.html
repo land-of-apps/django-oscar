@@ -27,6 +27,11 @@
             <form id="register_form" method="post">
                 {% csrf_token %}
                 {% include "oscar/partials/form_fields.html"  %}
+                {{ form.captcha.label_tag }}
+                {{ form.captcha }}
+                {% if form.captcha.errors %}
+                    {{ form.captcha.errors.as_text }}
+                {% endif %}
                 <button name="registration_submit" type="submit" value="Register" class="btn btn-primary btn-lg" data-loading-text="{%trans 'Registering...' %}">{% trans 'Register' %}</button>
                 {% if cancel_url %}
                     {% trans "or" %} <a href="{{ cancel_url }}">{% trans "cancel" %}</a>.
