@@ -145,6 +145,8 @@ class TestAnAnonymousUser(WebTestCase):
         form = self.app.get(url).forms["register_form"]
         form["email"] = "Terry@Boom.com"
         form["password1"] = form["password2"] = "hedgehog"
+        form.set("captcha_0", "PASSED", 1)
+        form.set("captcha_1", "PASSED", 1)
         form.submit()
         user = User.objects.all()[0]
         self.assertEqual(user.email, "Terry@boom.com")
