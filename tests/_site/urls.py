@@ -18,6 +18,10 @@ urlpatterns += i18n_patterns(
     path("test/", TestView),
 )
 
+urlpatterns += [
+    path('captcha/', include('captcha.urls')),
+]
+
 urlpatterns += staticfiles_urlpatterns()
 
 handler403 = "oscar.views.handler403"
