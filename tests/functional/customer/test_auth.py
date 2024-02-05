@@ -7,6 +7,7 @@ from django_webtest import WebTest
 from oscar.core.compat import get_user_model
 from oscar.test import factories
 from oscar.test.testcases import WebTestCase
+from captcha.conf import settings as captcha_settings
 
 User = get_user_model()
 
@@ -96,6 +97,16 @@ class TestAnAuthenticatedUser(WebTestCase):
 class TestAnAnonymousUser(WebTestCase):
     is_anonymous = True
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        captcha_settings.CAPTCHA_TEST_MODE = True
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        captcha_settings.CAPTCHA_TEST_MODE = False
+
     def assertCanLogin(self, email, password):
         url = reverse("customer:login")
         form = self.app.get(url).forms["login_form"]
@@ -124,6 +135,8 @@ class TestAnAnonymousUser(WebTestCase):
         form = self.app.get(url).forms["register_form"]
         form["email"] = "terry@boom.com"
         form["password1"] = form["password2"] = "hedgehog"
+        form.set("captcha_0", "PASSED", 1)
+        form.set("captcha_1", "PASSED", 1)
         response = form.submit()
         self.assertRedirectsTo(response, "customer:summary")
 
