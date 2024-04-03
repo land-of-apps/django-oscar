@@ -92,7 +92,6 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
           heroku container:login
           heroku container:push -a aictx-django-oscar web
           heroku container:release -a aictx-django-oscar web
