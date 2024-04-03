@@ -92,8 +92,9 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          heroku container:login
-          heroku container:push -a aictx-django-oscar web
+          docker tag django-oscar registry.heroku.com/aictx-django-oscar/web
+          docker login -u _ -p $HEROKU_API_KEY registry.heroku.com
+          docker push registry.heroku.com/aictx-django-oscar/web
           heroku container:release -a aictx-django-oscar web
 
   appmap-analysis:
