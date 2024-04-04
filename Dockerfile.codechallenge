@@ -3,7 +3,7 @@ FROM aictx-django-oscar:code
 WORKDIR /app
 
 RUN mkdir -p tmp
-COPY tmp/appmap tmp
+COPY tmp tmp
 
 COPY appmap /usr/local/bin/appmap
 
