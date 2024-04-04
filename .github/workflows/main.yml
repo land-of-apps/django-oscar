@@ -2,22 +2,6 @@ name: CI
 
 on:
   pull_request:
-  push:
-    branches:
-      - master
-  schedule:
-    - cron: "0 0 * * 0"
-
-permissions:
-  # Read the baseline artifact in order to perform the AppMap comparison.
-  actions: read
-  # Commit the AppMap configuration.
-  # If the EndBug/add-and-commit is removed, this can be changed to 'read'.
-  contents: write
-  # Add check annotations to the source code when a problem is detected.
-  checks: write
-  # Add a comment to the pull request.
-  pull-requests: write
 
 jobs:
   test:
@@ -69,13 +53,6 @@ jobs:
         run: |
           pytest
 
-      - name: Save AppMaps
-        uses: actions/cache/save@v3
-        if: always()
-        with:
-          path: ./tmp/appmap
-          key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
-
       - name: Index AppMaps
         run: |
           appmap index
@@ -93,13 +70,3 @@ jobs:
           docker login -u _ -p $HEROKU_API_KEY registry.heroku.com
           docker push registry.heroku.com/aictx-django-oscar/web
           heroku container:release -a aictx-django-oscar web
-
-  appmap-analysis:
-    if: always()
-    needs: [test] # You may need to change this to match the name of the step that runs your tests.
-    uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@v1
-    permissions:
-      actions: read
-      contents: read
-      checks: write
-      pull-requests: write
