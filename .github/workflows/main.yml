@@ -7,6 +7,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      # When building with --target, don't build previous stages as well.
+      DOCKER_BUILDKIT: 1
+
     services:
       postgres:
         image: postgres:14
