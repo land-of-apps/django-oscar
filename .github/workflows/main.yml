@@ -55,12 +55,14 @@ jobs:
 
       - name: Index AppMaps
         run: |
+          ls -al tmp/appmap
+          ls -al tmp/appmap/pytest
           appmap index
 
       - name: Docker build (final)
         run: |
           cp -r /usr/local/bin/appmap .
-          docker build -f Dockerfile.codechallenge -t aictx-django-oscar:web .
+          env DOCKER_BUILDKIT=0 docker build -f Dockerfile.codechallenge -t aictx-django-oscar:web --pull=false .
 
       - name: Push to Heroku
         env:
