@@ -7,10 +7,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    env:
-      # When building with --target, don't build previous stages as well.
-      DOCKER_BUILDKIT: 1
-
     services:
       postgres:
         image: postgres:14
@@ -27,7 +23,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Docker build target=source
-        run: docker build --target source -t django-oscar -f Dockerfile.codechallenge .
+        run: docker build -f Dockerfile.codechallenge.code -t aictx-django-oscar:code .
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -64,13 +60,13 @@ jobs:
       - name: Docker build (final)
         run: |
           cp -r /usr/local/bin/appmap .
-          docker build --target final -t django-oscar -f Dockerfile.codechallenge .
+          docker build -f Dockerfile.codechallenge -t aictx-django-oscar .
 
       - name: Push to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          docker tag django-oscar registry.heroku.com/aictx-django-oscar/web
+          docker tag aictx-django-oscar registry.heroku.com/aictx-django-oscar/web
           docker login -u _ -p $HEROKU_API_KEY registry.heroku.com
           docker push registry.heroku.com/aictx-django-oscar/web
           heroku container:release -a aictx-django-oscar web
