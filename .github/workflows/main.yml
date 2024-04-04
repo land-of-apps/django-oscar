@@ -39,7 +39,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Docker build target=source
-        run: docker build --target source -t django-oscar -f Dockerfile.codearena .
+        run: docker build --target source -t django-oscar -f Dockerfile.codechallenge .
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -80,13 +80,10 @@ jobs:
         run: |
           appmap index
 
-      - name: Docker build target=appmaps
-        run: docker build --target appmaps -t django-oscar -f Dockerfile.codearena .
-
       - name: Docker build (final)
         run: |
           cp -r /usr/local/bin/appmap .
-          docker build --target final -t django-oscar -f Dockerfile.codearena .
+          docker build --target final -t django-oscar -f Dockerfile.codechallenge .
 
       - name: Push to Heroku
         env:
