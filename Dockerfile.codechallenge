@@ -6,6 +6,8 @@ RUN mkdir -p tmp
 COPY tmp tmp
 
 COPY appmap /usr/local/bin/appmap
+COPY source-index.sqlite .
+COPY appmap-index.sqlite .
 
 EXPOSE 30102
 
