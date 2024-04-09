@@ -42,7 +42,7 @@ jobs:
         uses: getappmap/install-action@v1
         with:
           install-appmap-library: false
-          tools-url: https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap-context-api.ebd57c0a/appmap-linux-x64
+          tools-url: https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap-context-api.f9e7755f/appmap-linux-x64
 
       - name: Run tests
         env:
