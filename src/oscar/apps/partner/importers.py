@@ -51,18 +51,31 @@ class CatalogueImporter(object):
 
     @atomic
     def _import(self, file_path):
-        """Imports given file"""
-        stats = {'new_items': 0,
-                 'updated_items': 0}
+        """Imports given file in batches of 1000 rows"""
+        stats = {'new_items': 0, 'updated_items': 0}
         row_number = 0
+        batch_size = 1000
+        batch = []
+
         with open(file_path, 'rt') as f:
             reader = csv.reader(f, escapechar='\\')
             for row in reader:
                 row_number += 1
-                self._import_row(row_number, row, stats)
-        msg = "New items: %d, updated items: %d" % (stats['new_items'],
-                                                    stats['updated_items'])
+                batch.append(row)
+                if len(batch) >= batch_size:
+                    self._import_batch(batch, stats)
+                    batch = []
+
+            if batch:
+                self._import_batch(batch, stats)
+
+        msg = "New items: %d, updated items: %d" % (stats['new_items'], stats['updated_items'])
         self.logger.info(msg)
+
+    def _import_batch(self, batch, stats):
+        self.logger.info(f"Processing batch of size: {len(batch)}")
+        for row_number, row in enumerate(batch, start=1):
+            self._import_row(row_number, row, stats)
 
     def _import_row(self, row_number, row, stats):
         if len(row) != 5 and len(row) != 9:
