@@ -17,10 +17,9 @@ pip install -r requirements.txt
 # sandbox/manage.py runserver
 
 # Generate fake data
-# docker compose up -d postgres 
-# Generate 10k fake books
-# python utility/generate_fake_books.py 10000 sandbox/fixtures/books.generated.csv
-# Takes approx 15 seconds per 1000 records to insert so 1M records is about 4 hours
+# Generate 100k fake books
+# python utility/generate_fake_books.py 100000 sandbox/fixtures/books.generated.csv
+# Takes approx 3 seconds per 1000 records to insert so 100k records is about 5 min (scale appropriately)
 # make sandbox 
 # Then run the sandbox site
 # sandbox/manage.py runserver
