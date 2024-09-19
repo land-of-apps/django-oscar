@@ -30,3 +30,6 @@ ipython>=7.12,<9
 
 # Country data
 pycountry
+
+# AppMap
+appmap>=2.1.7
