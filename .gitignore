@@ -50,6 +50,7 @@ nosetests.xml
 /htmlcov/*
 /.tox/*
 /tmp/appmap
+appmap.log
 
 # Sandbox content
 settings_local.py
