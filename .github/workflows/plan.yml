@@ -20,7 +20,7 @@ jobs:
           submodules: true
 
       - name: Plan with Navie
-        uses: ./submodules/navie-editor/plan
+        uses: getappmap/navie-editor/plan@main
         with:
           issue_id: ${{ github.event.issue.number }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
