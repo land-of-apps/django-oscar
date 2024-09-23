@@ -57,3 +57,8 @@ settings_local.py
 /sandbox/public/
 /sandbox/whoosh_index/
 /sandbox/logs/
+
+# AppMap
+appmap.log
+tmp/appmap
+
