@@ -1,0 +1,7 @@
+appmap_dir: tmp/appmap
+language: python
+name: django-oscar.ms
+packages:
+- path: sandbox
+- path: oscar
+record_test_cases: false
