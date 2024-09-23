@@ -28,3 +28,6 @@ ipython>=7.12,<9
 
 # Country data
 pycountry
+
+# Pillow
+Pillow==9.5.0
