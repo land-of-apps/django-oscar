@@ -31,3 +31,6 @@ pycountry
 
 # Pillow
 Pillow==9.5.0
+
+# AppMap
+appmap
