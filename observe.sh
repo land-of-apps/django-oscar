@@ -1,1 +1,1 @@
-./issues/14/observe.sh
+./.navie/issues/14/observe.sh

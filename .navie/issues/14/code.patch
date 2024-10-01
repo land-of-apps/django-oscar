@@ -1,0 +1,13 @@
+diff --git a/src/oscar/apps/basket/utils.py b/src/oscar/apps/basket/utils.py
+index b229a7a24..221b31246 100644
+--- a/src/oscar/apps/basket/utils.py
++++ b/src/oscar/apps/basket/utils.py
+@@ -163,7 +163,7 @@ class LineOfferConsumer(object):
+                     if a.exclusive:
+                         if any([
+                             a.priority > offer.priority,
+-                            a.priority == offer.priority and a.id < offer.id
++                            a.priority == offer.priority and a.id != offer.id
+                         ]):
+                             # Exclusive offers cannot be applied if any other exclusive
+                             # offer with higher priority is active already.

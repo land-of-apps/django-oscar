@@ -1,0 +1,51 @@
+diff --git a/tests/integration/basket/test_exclusive_vouchers.py b/tests/integration/basket/test_exclusive_vouchers.py
+new file mode 100644
+index 000000000..a3a9d42a6
+--- /dev/null
++++ b/tests/integration/basket/test_exclusive_vouchers.py
+@@ -0,0 +1,45 @@
++import pytest
++
++from oscar.apps.offer.applicator import Applicator
++from oscar.test.factories import BasketFactory, ConditionalOfferFactory, ProductFactory
++from oscar.test.factories.voucher import VoucherFactory
++
++
++@pytest.fixture
++def filled_basket():
++    basket = BasketFactory()
++    product1 = ProductFactory()
++    product2 = ProductFactory()
++    basket.add_product(product1, quantity=10)
++    basket.add_product(product2, quantity=20)
++    return basket
++
++
++@pytest.mark.django_db
++class TestExclusiveVoucherOffers:
++
++    def test_apply_multiple_vouchers(self, filled_basket):
++        offer1 = ConditionalOfferFactory(
++            condition__range__includes_all_products=True,
++            benefit__range__includes_all_products=True,
++            name="offer1",
++            exclusive=True,
++        )
++        voucher1 = VoucherFactory(name="voucher1", code="VOUCHER1")
++        voucher1.offers.add(offer1)
++        offer2 = ConditionalOfferFactory(
++            condition__range__includes_all_products=True,
++            benefit__range__includes_all_products=True,
++            name="offer2",
++            exclusive=True,
++        )
++        voucher2 = VoucherFactory(name="voucher2", code="VOUCHER2")
++        voucher2.offers.add(offer2)
++        offer1.exclusive = True
++        offer2.exclusive = True
++
++        assert len(filled_basket.offer_applications) == 0
++        Applicator().apply_offers(basket=filled_basket, offers=[offer2, offer1])
++        filled_basket.refresh_from_db()
++        # Only one should be applied because they're both exclusive.
++        assert len(filled_basket.offer_applications) == 1

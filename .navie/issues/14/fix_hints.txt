@@ -1,0 +1,4 @@
+Fix LineOfferConsumer#available in src/oscar/apps/basket/utils.py
+
+Alter the condition in which both offers have the same priority.
+They are exclusive if they are different objects (have different id).
