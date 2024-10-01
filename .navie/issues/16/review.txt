@@ -1,0 +1,25 @@
+Compare the provided diff with the plan. Analyze the diff for potential problems. 
+
+Don't instruct the user to review changes and determine for themselves if there are
+problems. Just point out problems that you can see.
+
+Don't comment on code style.
+
+Conduct your review at the design level, not the code level. Avoid mentioning
+specific lines of code or code snippets, because the user hasn't read the code
+yet. They want an overview of the changes, before they read the code.
+
+Produce a checklist output in the following format:
+
+## Planned changes
+
+- [ ] Changes in the diff that are implemented as-planned
+
+## Unplanned changes
+
+- [ ] Changes in the diff that were not planned
+
+## Possible issues
+
+- [ ] List of possible issues
+
