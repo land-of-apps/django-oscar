@@ -1,0 +1,86 @@
+SELECT COUNT(*) 
+FROM (
+    SELECT DISTINCT 
+        "catalogue_product"."id" AS Col1, 
+        "catalogue_product"."structure" AS Col2, 
+        "catalogue_product"."is_public" AS Col3, 
+        "catalogue_product"."upc" AS Col4, 
+        "catalogue_product"."parent_id" AS Col5, 
+        "catalogue_product"."title" AS Col6, 
+        "catalogue_product"."slug" AS Col7, 
+        "catalogue_product"."description" AS Col8, 
+        "catalogue_product"."meta_title" AS Col9, 
+        "catalogue_product"."meta_description" AS Col10, 
+        "catalogue_product"."product_class_id" AS Col11, 
+        "catalogue_product"."rating" AS Col12, 
+        "catalogue_product"."date_created" AS Col13, 
+        "catalogue_product"."date_updated" AS Col14, 
+        "catalogue_product"."is_discountable" AS Col15 
+    FROM "catalogue_product" 
+    LEFT OUTER JOIN "catalogue_productcategory" 
+        ON "catalogue_product"."id" = "catalogue_productcategory"."product_id" 
+    LEFT OUTER JOIN "catalogue_productclass" 
+        ON "catalogue_product"."product_class_id" = "catalogue_productclass"."id" 
+    LEFT OUTER JOIN "offer_range_classes" 
+        ON "catalogue_productclass"."id" = "offer_range_classes"."productclass_id" 
+    LEFT OUTER JOIN "offer_rangeproduct" 
+        ON "catalogue_product"."id" = "offer_rangeproduct"."product_id" 
+    LEFT OUTER JOIN "catalogue_product" T9 
+        ON "catalogue_product"."parent_id" = T9."id" 
+    LEFT OUTER JOIN "catalogue_productcategory" T10 
+        ON T9."id" = T10."product_id" 
+    LEFT OUTER JOIN "catalogue_productclass" T12 
+        ON T9."product_class_id" = T12."id" 
+    LEFT OUTER JOIN "offer_range_classes" T13 
+        ON T12."id" = T13."productclass_id" 
+    LEFT OUTER JOIN "offer_rangeproduct" T15 
+        ON T9."id" = T15."product_id" 
+    WHERE (
+        "catalogue_productcategory"."category_id" IN (
+            SELECT "CATALOGUE_CATEGORY_JOIN"."id" 
+            FROM "catalogue_category" AS "CATALOGUE_CATEGORY_BASE" 
+            LEFT JOIN "catalogue_category" AS "CATALOGUE_CATEGORY_JOIN" 
+                ON "CATALOGUE_CATEGORY_JOIN"."path" LIKE "CATALOGUE_CATEGORY_BASE"."path" || ? 
+                AND "CATALOGUE_CATEGORY_BASE"."depth" <= "CATALOGUE_CATEGORY_JOIN"."depth" 
+            WHERE "CATALOGUE_CATEGORY_BASE"."id" IN (
+                SELECT U0."id" 
+                FROM "catalogue_category" U0 
+                INNER JOIN "offer_range_included_categories" U1 
+                    ON U0."id" = U1."category_id" 
+                WHERE U1."range_id" = ?
+            )
+        ) OR "offer_range_classes"."range_id" = ? 
+          OR "offer_rangeproduct"."range_id" = ? 
+          OR T10."category_id" IN (
+            SELECT "CATALOGUE_CATEGORY_JOIN"."id" 
+            FROM "catalogue_category" AS "CATALOGUE_CATEGORY_BASE" 
+            LEFT JOIN "catalogue_category" AS "CATALOGUE_CATEGORY_JOIN" 
+                ON "CATALOGUE_CATEGORY_JOIN"."path" LIKE "CATALOGUE_CATEGORY_BASE"."path" || ? 
+                AND "CATALOGUE_CATEGORY_BASE"."depth" <= "CATALOGUE_CATEGORY_JOIN"."depth" 
+            WHERE "CATALOGUE_CATEGORY_BASE"."id" IN (
+                SELECT U0."id" 
+                FROM "catalogue_category" U0 
+                INNER JOIN "offer_range_included_categories" U1 
+                    ON U0."id" = U1."category_id" 
+                WHERE U1."range_id" = ?
+            )
+        ) OR T13."range_id" = ? 
+          OR T15."range_id" = ? 
+        ) 
+        AND NOT EXISTS(
+            SELECT 1 
+            FROM "offer_range_excluded_products" U1 
+            WHERE U1."range_id" = ? 
+              AND U1."product_id" = "catalogue_product"."id"
+            LIMIT 1
+        ) 
+        AND NOT EXISTS(
+            SELECT 1 
+            FROM "offer_range_excluded_products" U2 
+            WHERE U2."range_id" = ? 
+              AND U2."product_id" = "catalogue_product"."parent_id"
+            LIMIT 1
+        ) 
+        AND "catalogue_product"."is_discountable" 
+        AND NOT "catalogue_product"."structure" = ?
+) subquery
