@@ -1,5 +1,9 @@
 import csv
 import operator
+import logging
+
+logger = logging.getLogger(__name__)
+
 from decimal import ROUND_DOWN
 from decimal import Decimal as D
 
@@ -446,13 +450,18 @@ class AbstractConditionalOffer(models.Model):
         """
         Return a queryset of products in this offer
         """
+        logger.debug("Fetching products for offer: %s", self.id)
         Product = get_model('catalogue', 'Product')
         if not self.has_products:
+            logger.debug("No products found for offer: %s", self.id)
             return Product.objects.none()
 
         queryset = self.condition.range.all_products()
-        return queryset.filter(is_discountable=True).exclude(
+        logger.debug("Initial queryset for offer %s: %s", self.id, queryset)
+        filtered_queryset = queryset.filter(is_discountable=True).exclude(
             structure=Product.CHILD)
+        logger.debug("Filtered queryset for offer %s: %s", self.id, filtered_queryset)
+        return filtered_queryset
 
     @cached_property
     def combined_offers(self):
