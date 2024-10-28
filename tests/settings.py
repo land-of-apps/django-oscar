@@ -19,6 +19,11 @@ DATABASES = {
     }
 }
 
+CAPTCHA_IMAGE_SIZE = (150, 50)
+CAPTCHA_FONT_SIZE = 32
+CAPTCHA_LENGTH = 6
+CAPTCHA_TIMEOUT = 5
+
 INSTALLED_APPS = [
     "captcha",
     "django.contrib.admin",
