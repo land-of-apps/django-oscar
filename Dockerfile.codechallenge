@@ -1,0 +1,14 @@
+FROM aictx-django-oscar:code
+
+WORKDIR /app
+
+RUN mkdir -p tmp
+COPY tmp tmp
+
+COPY appmap /usr/local/bin/appmap
+COPY source-index.sqlite .
+COPY appmap-index.sqlite .
+
+EXPOSE 30102
+
+CMD /usr/local/bin/appmap context-provider -d /app -p "${PORT:-30102}"

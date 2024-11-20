@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Docker build target=source
+        run: docker build -f Dockerfile.codechallenge.code -t aictx-django-oscar:code .
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          cache: "pip"
+
+      - name: Update Pip
+        run: python -m pip install --upgrade pip
+      - name: Install Pip Test Packages
+        run: pip install -e .[test]
+      - name: Install requirements.txt
+        run: pip install -r requirements.txt
+
+      - name: Install AppMap tools
+        uses: getappmap/install-action@v1
+        with:
+          install-appmap-library: false
+          tools-url: https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap-context-api.f9e7755f/appmap-linux-x64
+
+      - name: Run tests
+        env:
+          DATABASE_USER: postgres
+          DATABASE_PASSWORD: postgres
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
+        run: |
+          pytest
+
+      - name: Index AppMaps
+        run: |
+          ls -al tmp/appmap
+          ls -al tmp/appmap/pytest
+          # Index the AppMap data, creating index directories.
+          appmap index
+          # Build source and AppMap data index files.
+          appmap context-provider --no-listen
+
+      - name: Docker build (final)
+        run: |
+          cp -r /usr/local/bin/appmap .
+          env DOCKER_BUILDKIT=0 docker build -f Dockerfile.codechallenge -t aictx-django-oscar:web --pull=false .
+
+      - name: Push to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          docker tag aictx-django-oscar:web registry.heroku.com/aictx-django-oscar/web
+          docker login -u _ -p $HEROKU_API_KEY registry.heroku.com
+          docker push registry.heroku.com/aictx-django-oscar/web
+          heroku container:release -a aictx-django-oscar web
