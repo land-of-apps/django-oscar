@@ -32,6 +32,19 @@ CACHES = {
     'default': env.cache(default='locmemcache://'),
 }
 
+# Rate limiting settings
+# Enable rate limiting
+RATELIMIT_ENABLE = True
+
+# Specify the view to apply rate limiting
+RATELIMIT_VIEW = 'oscar.apps.customer.forms'
+
+# Set the rate limit (e.g., 5 requests per minute)
+RATELIMIT_RATE = '5/m'
+
+# Block requests that exceed the rate limit
+RATELIMIT_BLOCK = True
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

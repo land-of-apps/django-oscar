@@ -12,6 +12,7 @@ from django.utils.crypto import get_random_string
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
+from django_ratelimit.decorators import ratelimit
 
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.compat import existing_user_fields, get_user_model
@@ -102,6 +103,7 @@ class ConfirmPasswordForm(forms.Form):
         return password
 
 
+@ratelimit(key='ip', rate='5/m', block=True)
 class EmailUserCreationForm(forms.ModelForm):
     email = forms.EmailField(label=_("Email address"))
     password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
