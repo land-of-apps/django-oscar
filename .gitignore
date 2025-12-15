@@ -65,3 +65,7 @@ settings_local.py
 /logs/
 # Local environment config (for example new relic keys)
 /.env
+
+# AppMap
+appmap.log
+tmp/appmap
