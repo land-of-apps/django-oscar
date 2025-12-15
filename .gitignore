@@ -60,3 +60,8 @@ settings_local.py
 
 # test stuff
 /tests/whoosh_index/
+
+# Logs for the sandbox scripts
+/logs/
+# Local environment config (for example new relic keys)
+/.env
