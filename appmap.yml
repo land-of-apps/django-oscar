@@ -1,0 +1,8 @@
+appmap_dir: tmp/appmap
+language: python
+name: django-oscar_nov_2025
+packages:
+- path: sandbox
+- path: oscar
+  exclude: 
+  - apps.catalogue.abstract_models.AbstractCategory.get_ancestors_and_self
