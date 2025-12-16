@@ -53,6 +53,7 @@ dependencies = [
     "django-widget-tweaks>=1.4.1",
     "newrelic",
     "gunicorn",
+    "appmap",
 ]
 
 [project.optional-dependencies]

@@ -46,7 +46,7 @@ echo "Changing directory to sandbox..."
 cd "$PROJECT_ROOT/sandbox"
 
 # Define the command to run the server
-CMD="newrelic-admin run-program gunicorn --reload wsgi:application"
+CMD="newrelic-admin run-program appmap-python gunicorn --reload wsgi:application"
 
 if [ "$FOREGROUND" = true ]; then
   echo "Starting sandbox server in foreground..."
