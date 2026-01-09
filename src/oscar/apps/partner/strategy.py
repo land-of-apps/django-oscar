@@ -155,15 +155,7 @@ class Structured(Base):
         """
         records = []
 
-        public_children = product.get_public_children()
-
-        # It's possible that the get_public_children() returns a list (if it was prefetched)
-        # if it's not prefetched, prefetch the stockrecords to avoid N+1 queries.
-        if isinstance(public_children, QuerySet):
-            public_children = public_children.prefetch_related("stockrecords")
-
-        for child in public_children:
-            # Use tuples of (child product, stockrecord)
+        for child in product.children.public():
             records.append((child, self.select_stockrecord(child)))
         return records
 
