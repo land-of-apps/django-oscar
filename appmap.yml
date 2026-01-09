@@ -3,6 +3,11 @@ language: python
 name: django-oscar_nov_2025
 packages:
 - path: sandbox
+- path: haystack.generic_views
 - path: oscar
   exclude: 
   - apps.catalogue.abstract_models.AbstractCategory.get_ancestors_and_self
+- path: haystack.backends.whoosh_backend  # Include Whoosh backend
+  exclude:
+  - haystack.backends.whoosh_backend.WhooshSearchBackend._to_python
+- path: oscar.apps.search  # Include custom search logic
