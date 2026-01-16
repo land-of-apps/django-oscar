@@ -66,6 +66,9 @@ settings_local.py
 # Local environment config (for example new relic keys)
 /.env
 
+# Claude
+.claude/settings.local.json
+
 # AppMap
 appmap.log
 tmp/appmap
