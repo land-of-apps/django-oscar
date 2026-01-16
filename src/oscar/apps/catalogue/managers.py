@@ -106,7 +106,7 @@ class ProductQuerySet(models.query.QuerySet):
                 has_product_options=Exists(product_options),
             )
             .prefetch_related(
-                "children",
+                Prefetch("children", queryset=self.model.objects.all().prefetch_related("stockrecords")),
                 "product_options",
                 "product_class__options",
                 "stockrecords",
