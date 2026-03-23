@@ -64,4 +64,5 @@ settings_local.py
 # AppMap
 appmap.log
 tmp/appmap
+.appmap-apm/
 

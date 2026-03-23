@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "appmap-apm": {
+      "command": "bash",
+      "args": ["-c", "cd /Users/kgilpin/source/appland/appmap-apm && .venv/bin/python -m server.cli mcp /Users/kgilpin/source/land-of-apps/django-oscar_nov_2025"]
+    }
+  }
+}
